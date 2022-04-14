@@ -170,7 +170,7 @@ export default class ProbeTool extends AnnotationTool {
     // Ensure settings are initialized after annotation instantiation
     Settings.getObjectSettings(annotation, ProbeTool);
 
-    addAnnotation(element, annotation);
+    addAnnotation(annotation);
 
     const viewportIdsToRender = getViewportIdsWithToolToRender(
       element,
@@ -290,7 +290,7 @@ export default class ProbeTool extends AnnotationTool {
       this.isHandleOutsideImage &&
       this.configuration.preventHandleOutsideImage
     ) {
-      removeAnnotation(element, annotation.annotationUID);
+      removeAnnotation(annotation.annotationUID);
     }
 
     triggerAnnotationRenderForViewportIds(renderingEngine, viewportIdsToRender);
@@ -623,8 +623,6 @@ export default class ProbeTool extends AnnotationTool {
 
       const eventDetail: AnnotationModifiedEventDetail = {
         annotation,
-        viewportId,
-        renderingEngineId,
       };
 
       triggerEvent(eventTarget, eventType, eventDetail);

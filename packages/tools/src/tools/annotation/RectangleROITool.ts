@@ -190,7 +190,7 @@ export default class RectangleROITool extends AnnotationTool {
     // Ensure settings are initialized after annotation instantiation
     Settings.getObjectSettings(annotation, RectangleROITool);
 
-    addAnnotation(element, annotation);
+    addAnnotation(annotation);
 
     const viewportIdsToRender = getViewportIdsWithToolToRender(
       element,
@@ -372,7 +372,7 @@ export default class RectangleROITool extends AnnotationTool {
       this.isHandleOutsideImage &&
       this.configuration.preventHandleOutsideImage
     ) {
-      removeAnnotation(element, annotation.annotationUID);
+      removeAnnotation(annotation.annotationUID);
     }
 
     triggerAnnotationRenderForViewportIds(renderingEngine, viewportIdsToRender);
@@ -970,8 +970,6 @@ export default class RectangleROITool extends AnnotationTool {
 
     const eventDetail: AnnotationModifiedEventDetail = {
       annotation,
-      viewportId,
-      renderingEngineId,
     };
     triggerEvent(eventTarget, eventType, eventDetail);
 

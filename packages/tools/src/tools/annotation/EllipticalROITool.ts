@@ -203,7 +203,7 @@ export default class EllipticalROITool extends AnnotationTool {
     // Ensure settings are initialized after annotation instantiation
     Settings.getObjectSettings(annotation, EllipticalROITool);
 
-    addAnnotation(element, annotation);
+    addAnnotation(annotation);
 
     const viewportIdsToRender = getViewportIdsWithToolToRender(
       element,
@@ -428,7 +428,7 @@ export default class EllipticalROITool extends AnnotationTool {
       this.isHandleOutsideImage &&
       this.configuration.preventHandleOutsideImage
     ) {
-      removeAnnotation(element, annotation.annotationUID);
+      removeAnnotation(annotation.annotationUID);
     }
 
     triggerAnnotationRenderForViewportIds(renderingEngine, viewportIdsToRender);
@@ -1069,8 +1069,6 @@ export default class EllipticalROITool extends AnnotationTool {
 
     const eventDetail: AnnotationModifiedEventDetail = {
       annotation,
-      viewportId,
-      renderingEngineId,
     };
 
     triggerEvent(eventTarget, eventType, eventDetail);

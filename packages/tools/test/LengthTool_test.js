@@ -150,10 +150,7 @@ describe('LengthTool:', () => {
           expect(targets.length).toBe(1);
 
           expect(data[targets[0]].length).toBe(calculateLength(p1, p2));
-          annotation.state.removeAnnotation(
-            element,
-            lengthAnnotation.annotationUID
-          );
+          annotation.state.removeAnnotation(lengthAnnotation.annotationUID);
           done();
         });
       };
@@ -257,10 +254,7 @@ describe('LengthTool:', () => {
 
           expect(data[targets[0]].length).toBe(calculateLength(p1, p2));
 
-          annotation.state.removeAnnotation(
-            element,
-            lengthAnnotation.annotationUID
-          );
+          annotation.state.removeAnnotation(lengthAnnotation.annotationUID);
           done();
         });
       };
@@ -371,10 +365,7 @@ describe('LengthTool:', () => {
 
           expect(data[targets[0]].length).toBe(calculateLength(p3, p2));
 
-          annotation.state.removeAnnotation(
-            element,
-            lengthAnnotation.annotationUID
-          );
+          annotation.state.removeAnnotation(lengthAnnotation.annotationUID);
           done();
         });
       };
@@ -512,10 +503,7 @@ describe('LengthTool:', () => {
 
           expect(data[targets[0]].length).toBe(calculateLength(p1, p2));
 
-          annotation.state.removeAnnotation(
-            element,
-            lengthAnnotation.annotationUID
-          );
+          annotation.state.removeAnnotation(lengthAnnotation.annotationUID);
           done();
         });
       };
@@ -684,10 +672,7 @@ describe('LengthTool:', () => {
           expect(handles[0]).toEqual(afterMoveFirstHandle);
           expect(handles[1]).toEqual(afterMoveSecondHandle);
 
-          annotation.state.removeAnnotation(
-            element,
-            lengthAnnotation.annotationUID
-          );
+          annotation.state.removeAnnotation(lengthAnnotation.annotationUID);
           done();
         });
       };
@@ -839,10 +824,7 @@ describe('LengthTool:', () => {
           expect(targets.length).toBe(1);
 
           expect(data[targets[0]].length).toBe(calculateLength(p1, p2));
-          annotation.state.removeAnnotation(
-            element,
-            lengthAnnotation.annotationUID
-          );
+          annotation.state.removeAnnotation(lengthAnnotation.annotationUID);
 
           const annotationsAfterRemove = annotation.state.getAnnotations(
             element,
@@ -1059,10 +1041,7 @@ describe('LengthTool:', () => {
           expect(targets.length).toBe(1);
 
           expect(data[targets[0]].length).toBe(calculateLength(p1, p2));
-          annotation.state.removeAnnotation(
-            element,
-            lengthAnnotation.annotationUID
-          );
+          annotation.state.removeAnnotation(lengthAnnotation.annotationUID);
           done();
         }, 100);
       };

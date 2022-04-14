@@ -182,7 +182,7 @@ class LengthTool extends AnnotationTool {
     // Ensure settings are initialized after annotation instantiation
     Settings.getObjectSettings(annotation, LengthTool);
 
-    addAnnotation(element, annotation);
+    addAnnotation(annotation);
 
     const viewportIdsToRender = getViewportIdsWithToolToRender(
       element,
@@ -362,7 +362,7 @@ class LengthTool extends AnnotationTool {
       this.isHandleOutsideImage &&
       this.configuration.preventHandleOutsideImage
     ) {
-      removeAnnotation(element, annotation.annotationUID);
+      removeAnnotation(annotation.annotationUID);
     }
 
     triggerAnnotationRenderForViewportIds(renderingEngine, viewportIdsToRender);
@@ -714,8 +714,6 @@ class LengthTool extends AnnotationTool {
 
     const eventDetail: AnnotationModifiedEventDetail = {
       annotation,
-      viewportId,
-      renderingEngineId,
     };
     triggerEvent(eventTarget, eventType, eventDetail);
 

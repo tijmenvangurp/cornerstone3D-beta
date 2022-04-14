@@ -149,10 +149,7 @@ describe('EllipticalROITool (CPU):', () => {
         // the rectangle is drawn on the strip
         expect(data[targets[0]].mean).toBe(255);
 
-        annotation.state.removeAnnotation(
-          element,
-          ellipseAnnotation.annotationUID
-        );
+        annotation.state.removeAnnotation(ellipseAnnotation.annotationUID);
         done();
       });
     };
@@ -325,10 +322,7 @@ describe('EllipticalROITool (CPU):', () => {
         // the rectangle is drawn on the strip
         expect(data[targets[0]].mean).toBe(255);
 
-        annotation.state.removeAnnotation(
-          element,
-          ellipseAnnotation.annotationUID
-        );
+        annotation.state.removeAnnotation(ellipseAnnotation.annotationUID);
         done();
       }, 100);
     };

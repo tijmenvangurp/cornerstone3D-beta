@@ -9,8 +9,8 @@ type ModesFilter = Array<ToolModes>;
  * toolGroup. Returns the list of tool instances that are valid based
  * on the provided tool mode.
  *
- * @param element Canvas element
- * @param modesFilter tool modes: active, passive, enabled, disabled
+ * @param element - Canvas element
+ * @param modesFilter - tool modes: active, passive, enabled, disabled
  * @returns enabled tool instances
  */
 export default function getToolsWithModesForElement(

@@ -151,10 +151,7 @@ describe('Length Tool (CPU):', () => {
         expect(targets.length).toBe(1);
 
         expect(data[targets[0]].length).toBe(calculateLength(p1, p2));
-        annotation.state.removeAnnotation(
-          element,
-          lengthAnnotation.annotationUID
-        );
+        annotation.state.removeAnnotation(lengthAnnotation.annotationUID);
         done();
       });
     };
@@ -260,10 +257,7 @@ describe('Length Tool (CPU):', () => {
 
         expect(data[targets[0]].length).toBe(calculateLength(p3, p2));
 
-        annotation.state.removeAnnotation(
-          element,
-          lengthAnnotation.annotationUID
-        );
+        annotation.state.removeAnnotation(lengthAnnotation.annotationUID);
         done();
       });
     };
@@ -401,10 +395,7 @@ describe('Length Tool (CPU):', () => {
 
         expect(data[targets[0]].length).toBe(calculateLength(p1, p2));
 
-        annotation.state.removeAnnotation(
-          element,
-          lengthAnnotation.annotationUID
-        );
+        annotation.state.removeAnnotation(lengthAnnotation.annotationUID);
         done();
       });
     };
@@ -570,10 +561,7 @@ describe('Length Tool (CPU):', () => {
         expect(handles[0]).toEqual(afterMoveFirstHandle);
         expect(handles[1]).toEqual(afterMoveSecondHandle);
 
-        annotation.state.removeAnnotation(
-          element,
-          lengthAnnotation.annotationUID
-        );
+        annotation.state.removeAnnotation(lengthAnnotation.annotationUID);
         done();
       });
     };

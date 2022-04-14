@@ -12,7 +12,6 @@ import {
   addAnnotation,
   removeAnnotation,
   getDefaultAnnotationManager,
-  getViewportSpecificAnnotationManager,
   getAnnotation,
 } from './annotation/annotationState';
 
@@ -34,7 +33,6 @@ export {
   setToolStyle,
   removeAnnotation,
   getDefaultAnnotationManager,
-  getViewportSpecificAnnotationManager,
   getAnnotation,
   // segmentations
   addSegmentationRepresentations,

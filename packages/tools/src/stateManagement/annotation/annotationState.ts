@@ -5,7 +5,6 @@ import {
   utilities as csUtils,
 } from '@cornerstonejs/core';
 import { Events } from '../../enums';
-import { Types } from '@cornerstonejs/core';
 import { defaultFrameOfReferenceSpecificAnnotationManager } from './FrameOfReferenceSpecificAnnotationManager';
 import { Annotations, Annotation } from '../../types/AnnotationTypes';
 
@@ -23,24 +22,6 @@ function getDefaultAnnotationManager() {
 }
 
 /**
- * Given an element, return the FrameOfReferenceSpecificStateManager for that
- * element
- * @param element - The element that the state manager is managing the state of.
- * @returns The default state manager
- */
-function getViewportSpecificAnnotationManager(
-  element?: Types.IEnabledElement | HTMLDivElement
-) {
-  // TODO:
-  // We may want multiple FrameOfReferenceSpecificStateManagers.
-  // E.g. displaying two different radiologists annotations on the same underlying data/FoR.
-
-  // Just return the default for now.
-
-  return defaultFrameOfReferenceSpecificAnnotationManager;
-}
-
-/**
  * Returns the annotations for the `FrameOfReference` of the `Viewport`
  * being viewed by the cornerstone3D enabled `element`.
  *
@@ -53,8 +34,7 @@ function getAnnotations(
   toolName: string
 ): Annotations {
   const enabledElement = getEnabledElement(element);
-  const annotationManager =
-    getViewportSpecificAnnotationManager(enabledElement);
+  const annotationManager = getDefaultAnnotationManager();
   const { FrameOfReferenceUID } = enabledElement;
 
   return annotationManager.get(FrameOfReferenceUID, toolName);
@@ -67,8 +47,8 @@ function getAnnotations(
  * @param element - HTMLDivElement
  * @param annotation - The annotation that is being added to the annotations manager.
  */
-function addAnnotation(element: HTMLDivElement, annotation: Annotation): void {
-  const annotationManager = getViewportSpecificAnnotationManager(element);
+function addAnnotation(annotation: Annotation): void {
+  const annotationManager = getDefaultAnnotationManager();
 
   if (annotation.annotationUID === undefined) {
     annotation.annotationUID = csUtils.uuidv4() as string;
@@ -76,16 +56,9 @@ function addAnnotation(element: HTMLDivElement, annotation: Annotation): void {
 
   annotationManager.addAnnotation(annotation);
 
-  const enabledElement = getEnabledElement(element);
-  const { renderingEngine } = enabledElement;
-  const { viewportId } = enabledElement;
-
   const eventType = Events.ANNOTATION_ADDED;
-
   const eventDetail: AnnotationAddedEventDetail = {
     annotation,
-    viewportId,
-    renderingEngineId: renderingEngine.id,
   };
 
   triggerEvent(eventTarget, eventType, eventDetail);
@@ -96,26 +69,15 @@ function addAnnotation(element: HTMLDivElement, annotation: Annotation): void {
  * @param element - HTMLDivElement
  * @param annotationUID - The unique identifier for the annotation.
  */
-function removeAnnotation(
-  element: HTMLDivElement,
-  annotationUID: string
-): void {
-  const annotationManager = getViewportSpecificAnnotationManager(element);
+function removeAnnotation(annotationUID: string): void {
+  const annotationManager = getDefaultAnnotationManager();
 
   const annotation = annotationManager.getAnnotation(annotationUID);
   annotationManager.removeAnnotation(annotationUID);
 
-  // trigger annotation removed
-  const enabledElement = getEnabledElement(element);
-  const { renderingEngine } = enabledElement;
-  const { viewportId } = enabledElement;
-
   const eventType = Events.ANNOTATION_REMOVED;
-
   const eventDetail: AnnotationRemovedEventDetail = {
     annotation,
-    viewportId,
-    renderingEngineId: renderingEngine.id,
   };
 
   triggerEvent(eventTarget, eventType, eventDetail);
@@ -127,11 +89,8 @@ function removeAnnotation(
  * @param element - The element that the tool is being used on.
  * @returns A Annotation object.
  */
-function getAnnotation(
-  annotationUID: string,
-  element?: HTMLDivElement
-): Annotation {
-  const annotationManager = getViewportSpecificAnnotationManager(element);
+function getAnnotation(annotationUID: string): Annotation {
+  const annotationManager = getDefaultAnnotationManager();
   const annotation = annotationManager.getAnnotation(annotationUID);
 
   return annotation;
@@ -142,6 +101,5 @@ export {
   addAnnotation,
   getAnnotation,
   removeAnnotation,
-  getViewportSpecificAnnotationManager,
   getDefaultAnnotationManager,
 };

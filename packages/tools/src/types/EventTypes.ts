@@ -25,10 +25,6 @@ type NormalizedMouseEventDetail = {
  * to the annotations.
  */
 type AnnotationAddedEventDetail = {
-  /** unique id of the viewport */
-  viewportId: string;
-  /** unique id of the rendering engine */
-  renderingEngineId: string;
   /** The annotation that is being added to the annotations manager. */
   annotation: Annotation;
 };
@@ -37,10 +33,6 @@ type AnnotationAddedEventDetail = {
  * The data that is passed to the event handler when an annotation is modified.
  */
 type AnnotationModifiedEventDetail = {
-  /** unique id of the viewport */
-  viewportId: string;
-  /** unique id of the rendering engine */
-  renderingEngineId: string;
   /** The annotation that is being added to the annotations manager. */
   annotation: Annotation;
 };
@@ -49,10 +41,6 @@ type AnnotationModifiedEventDetail = {
  * The data that is passed to the event handler when an annotation is completed drawing.
  */
 type AnnotationRemovedEventDetail = {
-  /** unique id of the viewport */
-  viewportId: string;
-  /** unique id of the rendering engine */
-  renderingEngineId: string;
   /** The annotation that is being added to the annotations manager. */
   annotation: Annotation;
 };

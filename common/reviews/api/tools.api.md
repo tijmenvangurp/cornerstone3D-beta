@@ -25,7 +25,7 @@ type ActorEntry = {
 };
 
 // @public (undocumented)
-function addAnnotation(element: HTMLDivElement, annotation: Annotation): void;
+function addAnnotation(annotation: Annotation): void;
 
 // @public (undocumented)
 function addColorLUT(colorLUT: ColorLUT, index: number): void;
@@ -96,8 +96,6 @@ export { annotation }
 
 // @public (undocumented)
 type AnnotationAddedEventDetail = {
-    viewportId: string;
-    renderingEngineId: string;
     annotation: Annotation;
 };
 
@@ -119,8 +117,6 @@ type AnnotationLockChangeEventType = Types_2.CustomEventType<AnnotationLockChang
 
 // @public (undocumented)
 type AnnotationModifiedEventDetail = {
-    viewportId: string;
-    renderingEngineId: string;
     annotation: Annotation;
 };
 
@@ -129,8 +125,6 @@ type AnnotationModifiedEventType = Types_2.CustomEventType<AnnotationModifiedEve
 
 // @public (undocumented)
 type AnnotationRemovedEventDetail = {
-    viewportId: string;
-    renderingEngineId: string;
     annotation: Annotation;
 };
 
@@ -1281,7 +1275,7 @@ function getAllSynchronizers(): Array<Synchronizer>;
 function getAllToolGroups(): Array<IToolGroup>;
 
 // @public (undocumented)
-function getAnnotation(annotationUID: string, element?: HTMLDivElement): Annotation;
+function getAnnotation(annotationUID: string): Annotation;
 
 // @public (undocumented)
 function getAnnotationNearPoint(element: HTMLDivElement, canvasPoint: Types_2.Point2, proximity?: number): Annotation | null;
@@ -1402,10 +1396,10 @@ function getToolGroupSpecificConfig_2(toolGroupId: string): SegmentationRepresen
 function getToolGroupsWithSegmentation(segmentationId: string): string[];
 
 // @public (undocumented)
-function getViewportIdsWithToolToRender(element: HTMLDivElement, toolName: string, requireSameOrientation?: boolean): string[];
+function getToolGroupsWithToolName(toolName: string): IToolGroup[] | [];
 
 // @public (undocumented)
-function getViewportSpecificAnnotationManager(element?: Types_2.IEnabledElement | HTMLDivElement): FrameOfReferenceSpecificAnnotationManager;
+function getViewportIdsWithToolToRender(element: HTMLDivElement, toolName: string, requireSameOrientation?: boolean): string[];
 
 // @public (undocumented)
 function getWorldWidthAndHeightFromCorners(viewPlaneNormal: Types_2.Point3, viewUp: Types_2.Point3, topLeftWorld: Types_2.Point3, bottomRightWorld: Types_2.Point3): {
@@ -2852,7 +2846,7 @@ function registerCursor(toolName: string, iconContent: string, viewBox: {
 }): void;
 
 // @public (undocumented)
-function removeAnnotation(element: HTMLDivElement, annotationUID: string): void;
+function removeAnnotation(annotationUID: string): void;
 
 // @public (undocumented)
 function removeSegmentationRepresentation(toolGroupId: string, segmentationRepresentationUID: string): void;
@@ -3215,7 +3209,6 @@ declare namespace state {
         addAnnotation,
         getAnnotation,
         removeAnnotation,
-        getViewportSpecificAnnotationManager,
         getDefaultAnnotationManager
     }
 }
@@ -3339,7 +3332,8 @@ declare namespace ToolGroupManager {
         destroyToolGroup,
         getToolGroup,
         getToolGroupForViewport,
-        getAllToolGroups
+        getAllToolGroups,
+        getToolGroupsWithToolName
     }
 }
 export { ToolGroupManager }

@@ -139,10 +139,7 @@ describe('Probe Tool: ', () => {
           // The world coordinate is on the white bar so value is 255
           expect(data[targets[0]].value).toBe(255);
 
-          annotation.state.removeAnnotation(
-            element,
-            probeAnnotation.annotationUID
-          );
+          annotation.state.removeAnnotation(probeAnnotation.annotationUID);
           done();
         });
       };
@@ -243,12 +240,8 @@ describe('Probe Tool: ', () => {
           expect(data[targets[0]].value).toBe(0);
 
           //
+          annotation.state.removeAnnotation(firstProbeAnnotation.annotationUID);
           annotation.state.removeAnnotation(
-            element,
-            firstProbeAnnotation.annotationUID
-          );
-          annotation.state.removeAnnotation(
-            element,
             secondProbeAnnotation.annotationUID
           );
 
@@ -355,10 +348,7 @@ describe('Probe Tool: ', () => {
           // The world coordinate is on the white bar so value is 255
           expect(data[targets[0]].value).toBe(255);
 
-          annotation.state.removeAnnotation(
-            element,
-            probeAnnotation.annotationUID
-          );
+          annotation.state.removeAnnotation(probeAnnotation.annotationUID);
           done();
         });
       };
@@ -438,10 +428,7 @@ describe('Probe Tool: ', () => {
           // The world coordinate is on the white bar so value is 255
           expect(data[targets[0]].value).toBe(0);
 
-          annotation.state.removeAnnotation(
-            element,
-            probeAnnotation.annotationUID
-          );
+          annotation.state.removeAnnotation(probeAnnotation.annotationUID);
           done();
         });
       };
@@ -518,10 +505,7 @@ describe('Probe Tool: ', () => {
 
           expect(data[targets[0]].value).toBe(255);
 
-          annotation.state.removeAnnotation(
-            element,
-            probeAnnotation.annotationUID
-          );
+          annotation.state.removeAnnotation(probeAnnotation.annotationUID);
           done();
         });
       };
@@ -615,10 +599,7 @@ describe('Probe Tool: ', () => {
 
           expect(handles[0]).toEqual(p2);
 
-          annotation.state.removeAnnotation(
-            element,
-            probeAnnotation.annotationUID
-          );
+          annotation.state.removeAnnotation(probeAnnotation.annotationUID);
           done();
         });
       };
@@ -842,10 +823,7 @@ describe('Probe Tool: ', () => {
 
           expect(handles[0]).toEqual(p2);
 
-          annotation.state.removeAnnotation(
-            element,
-            probeAnnotation.annotationUID
-          );
+          annotation.state.removeAnnotation(probeAnnotation.annotationUID);
           done();
         }, 100);
       };

@@ -1,4 +1,8 @@
-import { getRenderingEngine } from '@cornerstonejs/core';
+import {
+  getEnabledElementByIds,
+  getRenderingEngine,
+} from '@cornerstonejs/core';
+import { getToolGroupsWithToolName } from '../../store/ToolGroupManager';
 import triggerAnnotationRenderForViewportIds from '../../utilities/triggerAnnotationRenderForViewportIds';
 
 /**
@@ -14,9 +18,53 @@ import triggerAnnotationRenderForViewportIds from '../../utilities/triggerAnnota
  * no svg update happens since the attributes for handles are the same)
  */
 function annotationModifiedListener(evt): void {
-  const { viewportId, renderingEngineId } = evt.detail;
-  const renderingEngine = getRenderingEngine(renderingEngineId);
-  triggerAnnotationRenderForViewportIds(renderingEngine, [viewportId]);
+  const { annotation } = evt.detail;
+  const { toolName } = annotation.metadata;
+
+  // Get the toolGroups that has the toolName as active, passive or enabled
+  const toolGroups = getToolGroupsWithToolName(toolName);
+
+  if (!toolGroups.length) {
+    return;
+  }
+
+  // Find the viewports in the toolGroups who has the same FrameOfReferenceUID
+  const viewportsToRender = [];
+
+  toolGroups.forEach((toolGroup) => {
+    // @ts-ignore
+    toolGroup.viewportsInfo.forEach((viewportInfo) => {
+      const { renderingEngineId, viewportId } = viewportInfo;
+      const { FrameOfReferenceUID } = getEnabledElementByIds(
+        viewportId,
+        renderingEngineId
+      );
+
+      if (annotation.metadata.FrameOfReferenceUID === FrameOfReferenceUID) {
+        viewportsToRender.push(viewportInfo);
+      }
+    });
+  });
+
+  // Group the viewports by renderingEngineId
+  const groupedViewports = {};
+  viewportsToRender.forEach(({ renderingEngineId, viewportId }) => {
+    if (!groupedViewports[renderingEngineId]) {
+      groupedViewports[renderingEngineId] = [];
+    }
+
+    groupedViewports[renderingEngineId].push(viewportId);
+  });
+
+  // Trigger the render for the viewports
+  Object.keys(groupedViewports).forEach((renderingEngineId) => {
+    const renderingEngine = getRenderingEngine(renderingEngineId);
+
+    triggerAnnotationRenderForViewportIds(
+      renderingEngine,
+      groupedViewports[renderingEngineId]
+    );
+  });
 }
 
 export default annotationModifiedListener;

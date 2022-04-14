@@ -5,7 +5,6 @@ import {
   StackViewport,
   Settings,
   cache,
-  metaData,
 } from '@cornerstonejs/core';
 import type { Types } from '@cornerstonejs/core';
 
@@ -13,7 +12,7 @@ import { vec4, vec2 } from 'gl-matrix';
 
 import BaseTool from './BaseTool';
 import { isAnnotationLocked } from '../../stateManagement/annotation/annotationLocking';
-import { getViewportSpecificAnnotationManager } from '../../stateManagement/annotation/annotationState';
+import { getDefaultAnnotationManager } from '../../stateManagement/annotation/annotationState';
 import {
   Annotation,
   Annotations,
@@ -230,7 +229,7 @@ abstract class AnnotationTool extends BaseTool {
     const calibratedIndexToWorld = calibratedImageData.getIndexToWorld();
 
     const imageURI = utilities.imageIdToURI(imageId);
-    const stateManager = getViewportSpecificAnnotationManager(element);
+    const stateManager = getDefaultAnnotationManager();
     const framesOfReference = stateManager.getFramesOfReference();
 
     // For each frame Of Reference

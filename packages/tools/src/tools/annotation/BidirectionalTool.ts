@@ -191,7 +191,7 @@ export default class BidirectionalTool extends AnnotationTool {
     // Ensure settings are initialized after annotation instantiation
     Settings.getObjectSettings(annotation, BidirectionalTool);
 
-    addAnnotation(element, annotation);
+    addAnnotation(annotation);
 
     const viewportIdsToRender = getViewportIdsWithToolToRender(
       element,
@@ -482,7 +482,7 @@ export default class BidirectionalTool extends AnnotationTool {
       this.isHandleOutsideImage &&
       this.configuration.preventHandleOutsideImage
     ) {
-      removeAnnotation(element, annotation.annotationUID);
+      removeAnnotation(annotation.annotationUID);
     }
 
     triggerAnnotationRenderForViewportIds(renderingEngine, viewportIdsToRender);
@@ -1208,8 +1208,6 @@ export default class BidirectionalTool extends AnnotationTool {
 
     const eventDetail: AnnotationModifiedEventDetail = {
       annotation,
-      viewportId,
-      renderingEngineId,
     };
     triggerEvent(eventTarget, eventType, eventDetail);
 

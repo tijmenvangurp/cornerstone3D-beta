@@ -133,7 +133,7 @@ export default class RectangleROIThresholdTool extends RectangleROITool {
     // Ensure settings are initialized after annotation instantiation
     Settings.getObjectSettings(annotation, RectangleROIThresholdTool);
 
-    addAnnotation(element, annotation);
+    addAnnotation(annotation);
 
     const viewportIdsToRender = getViewportIdsWithToolToRender(
       element,
@@ -217,8 +217,6 @@ export default class RectangleROIThresholdTool extends RectangleROITool {
 
       const eventDetail: AnnotationModifiedEventDetail = {
         annotation,
-        viewportId: viewport.id,
-        renderingEngineId,
       };
 
       triggerEvent(eventTarget, eventType, eventDetail);
