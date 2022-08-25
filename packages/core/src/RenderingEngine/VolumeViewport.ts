@@ -30,7 +30,13 @@ import { RENDERING_DEFAULTS } from '../constants';
 import { Events, BlendModes, OrientationAxis } from '../enums';
 import eventTarget from '../eventTarget';
 import type { vtkSlabCamera as vtkSlabCameraType } from './vtkClasses/vtkSlabCamera';
-import { imageIdToURI, triggerEvent } from '../utilities';
+import {
+  imageIdToURI,
+  triggerEvent,
+  createSigmoidRGBTransferFunction,
+  windowLevel as windowLevelUtil,
+} from '../utilities';
+import VOILUTFunctionType from '../enums/VOILUTFunctionType';
 import { VoiModifiedEventDetail } from '../types/EventTypes';
 import deepFreeze from '../utilities/deepFreeze';
 
@@ -70,7 +76,6 @@ class VolumeViewport extends Viewport implements IVolumeViewport {
 
   constructor(props: ViewportInput) {
     super(props);
-
     this.useCPURendering = getShouldUseCPURendering();
 
     if (this.useCPURendering) {
@@ -175,11 +180,12 @@ class VolumeViewport extends Viewport implements IVolumeViewport {
    * (if fusion, it sets it for the first volume in the fusion)
    *
    * @param voiRange - Sets the lower and upper voi
+   * @param voiFunction - Sets the voi mode (LINEAR, EXACT_LINEAR, or SIGMOID)
    * @param volumeId - The volume id to set the properties for (if undefined, the first volume)
    * @param suppressEvents - If true, the viewport will not emit events
    */
   public setProperties(
-    { voiRange }: VolumeViewportProperties = {},
+    { voiRange, voiFunction }: VolumeViewportProperties = {},
     volumeId?: string,
     suppressEvents = false
   ): void {
@@ -215,7 +221,35 @@ class VolumeViewport extends Viewport implements IVolumeViewport {
 
     // Todo: later when we have more properties, refactor the setVoiRange code below
     const { lower, upper } = voiRange;
-    volumeActor.getProperty().getRGBTransferFunction(0).setRange(lower, upper);
+
+    // Todo: consider moving voiFunction into the ViewportInput, currently VolumeViewport
+    // setProperties is used by @cornerstonejs/tools which does not pass a voiFunction.
+    if (voiFunction === VOILUTFunctionType.SIGMOID) {
+      const { windowWidth, windowCenter } = windowLevelUtil.toWindowLevel(
+        voiRange.lower,
+        voiRange.upper
+      );
+      const imageData = volumeActor.getMapper().getInputData();
+      const range = imageData.getPointData().getScalars().getRange();
+      const maxVoiRange = { lower: range[0], upper: range[1] };
+      const maxVoi = windowLevelUtil.toWindowLevel(
+        maxVoiRange.lower,
+        maxVoiRange.upper
+      );
+      const cfun = createSigmoidRGBTransferFunction(
+        windowWidth,
+        windowCenter,
+        maxVoiRange
+      );
+      volumeActor.getProperty().setRGBTransferFunction(0, cfun);
+      volumeActor.getProperty().setColorWindow(maxVoi.windowWidth);
+      volumeActor.getProperty().setColorLevel(maxVoi.windowCenter);
+    } else {
+      volumeActor
+        .getProperty()
+        .getRGBTransferFunction(0)
+        .setRange(lower, upper);
+    }
 
     if (!suppressEvents) {
       const eventDetail: VoiModifiedEventDetail = {

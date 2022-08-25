@@ -1,5 +1,6 @@
 import { metaData } from '@cornerstonejs/core';
 import type { Types } from '@cornerstonejs/core';
+import { Enums } from '@cornerstonejs/core';
 
 /**
  * It creates a metadata object for a volume given the imageIds that compose it.
@@ -28,8 +29,10 @@ export default function makeVolumeMetadata(
   const voiLutModule = metaData.get('voiLutModule', imageId0);
 
   // voiLutModule is not always present
+  let voiLUTFunction;
   if (voiLutModule) {
     const { windowWidth, windowCenter } = voiLutModule;
+    voiLUTFunction = voiLutModule?.voiLutModule;
 
     if (Array.isArray(windowWidth)) {
       for (let i = 0; i < windowWidth.length; i++) {
@@ -81,6 +84,7 @@ export default function makeVolumeMetadata(
     Rows: rows,
     // This is a reshaped object and not a dicom tag:
     voiLut,
+    VOILUTFunction: voiLUTFunction,
     SeriesInstanceUID: seriesInstanceUID,
   };
 }

@@ -590,6 +590,7 @@ interface IImage {
         lastRenderTime?: number;
     };
     voiLUT?: CPUFallbackLUT;
+    voiLUTFunction: string;
     width: number;
     windowCenter: number[] | number;
     windowWidth: number[] | number;
@@ -1055,6 +1056,7 @@ type Metadata = {
     Columns: number;
     Rows: number;
     voiLut: Array<VOI>;
+    VOILUTFunction: string;
 };
 
 // @public (undocumented)
@@ -1252,6 +1254,16 @@ type VOI = {
 };
 
 // @public
+enum VOILUTFunctionType {
+    // (undocumented)
+    EXACT_LINEAR,
+    // (undocumented)
+    LINEAR,
+    // (undocumented)
+    SIGMOID,
+}
+
+// @public
 type VoiModifiedEvent = CustomEvent_2<VoiModifiedEventDetail>;
 
 // @public
@@ -1335,6 +1347,7 @@ type VolumeNewImageEventDetail = {
 // @public
 type VolumeViewportProperties = {
     voiRange?: VOIRange;
+    voiFunction?: VOILUTFunctionType;
 };
 
 // (No @packageDocumentation comment for this package)

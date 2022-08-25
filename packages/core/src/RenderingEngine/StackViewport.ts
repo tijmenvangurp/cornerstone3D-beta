@@ -15,6 +15,7 @@ import {
   triggerEvent,
   isEqual,
   invertRgbTransferFunction,
+  createSigmoidRGBTransferFunction,
   windowLevel as windowLevelUtil,
   imageIdToURI,
   isImageActor,
@@ -46,6 +47,7 @@ import { getColormap } from './helpers/cpuFallback/colors/index';
 import { loadAndCacheImage } from '../imageLoader';
 import imageLoadPoolManager from '../requestPool/imageLoadPoolManager';
 import InterpolationType from '../enums/InterpolationType';
+import VOILUTFunctionType from '../enums/VOILUTFunctionType';
 import canvasToPixel from './helpers/cpuFallback/rendering/canvasToPixel';
 import pixelToCanvas from './helpers/cpuFallback/rendering/pixelToCanvas';
 import getDefaultViewport from './helpers/cpuFallback/rendering/getDefaultViewport';
@@ -77,6 +79,7 @@ interface ImagePixelModule {
   pixelRepresentation: string;
   windowWidth: number;
   windowCenter: number;
+  voiLUTFunction: VOILUTFunctionType;
   modality: string;
 }
 
@@ -132,6 +135,7 @@ class StackViewport extends Viewport implements IStackViewport {
 
   // Viewport Properties
   private voiRange: VOIRange;
+  private voiFunction: VOILUTFunctionType;
   private initialVOIRange: VOIRange;
   private invert = false;
   private interpolationType: InterpolationType;
@@ -396,9 +400,9 @@ class StackViewport extends Viewport implements IStackViewport {
 
     const voiLutModule = metaData.get('voiLutModule', imageId);
 
-    let windowWidth, windowCenter;
+    let windowWidth, windowCenter, voiLUTFunction;
     if (voiLutModule) {
-      ({ windowWidth, windowCenter } = voiLutModule);
+      ({ windowWidth, windowCenter, voiLUTFunction } = voiLutModule);
 
       if (Array.isArray(windowWidth)) {
         windowWidth = windowWidth[0];
@@ -406,6 +410,19 @@ class StackViewport extends Viewport implements IStackViewport {
 
       if (Array.isArray(windowCenter)) {
         windowCenter = windowCenter[0];
+      }
+
+      // when cornerstoneWADOImageLoader uses cornerstonejs/core types
+      // this marshalling step can be removed.
+      switch (voiLUTFunction) {
+        case 'SIGMOID':
+          voiLUTFunction = VOILUTFunctionType.SIGMOID;
+          break;
+        case 'EXACT_LINEAR':
+          voiLUTFunction = VOILUTFunctionType.EXACT_LINEAR;
+          break;
+        default:
+          voiLUTFunction = VOILUTFunctionType.LINEAR;
       }
     }
 
@@ -437,6 +454,7 @@ class StackViewport extends Viewport implements IStackViewport {
         pixelRepresentation,
         windowWidth,
         windowCenter,
+        voiLUTFunction,
         modality,
       },
     };
@@ -1011,12 +1029,13 @@ class StackViewport extends Viewport implements IStackViewport {
     }
 
     const imageActor = actor as ImageActor;
-
+    const imageData = imageActor.getMapper().getInputData();
+    const range = imageData.getPointData().getScalars().getRange();
+    const maxVoiRange = { lower: range[0], upper: range[1] };
     let voiRangeToUse = voiRange;
+
     if (typeof voiRangeToUse === 'undefined') {
-      const imageData = imageActor.getMapper().getInputData();
-      const range = imageData.getPointData().getScalars().getRange();
-      voiRangeToUse = { lower: range[0], upper: range[1] };
+      voiRangeToUse = maxVoiRange;
     }
 
     const { windowWidth, windowCenter } = windowLevelUtil.toWindowLevel(
@@ -1024,8 +1043,23 @@ class StackViewport extends Viewport implements IStackViewport {
       voiRangeToUse.upper
     );
 
-    imageActor.getProperty().setColorWindow(windowWidth);
-    imageActor.getProperty().setColorLevel(windowCenter);
+    if (this.voiFunction === VOILUTFunctionType.SIGMOID) {
+      const cfun = createSigmoidRGBTransferFunction(
+        windowWidth,
+        windowCenter,
+        maxVoiRange
+      );
+      imageActor.getProperty().setRGBTransferFunction(0, cfun);
+      const maxVoi = windowLevelUtil.toWindowLevel(
+        maxVoiRange.lower,
+        maxVoiRange.upper
+      );
+      imageActor.getProperty().setColorWindow(maxVoi.windowWidth);
+      imageActor.getProperty().setColorLevel(maxVoi.windowCenter);
+    } else {
+      imageActor.getProperty().setColorWindow(windowWidth);
+      imageActor.getProperty().setColorLevel(windowCenter);
+    }
 
     this.voiApplied = true;
     this.voiRange = voiRangeToUse;
@@ -1750,7 +1784,8 @@ class StackViewport extends Viewport implements IStackViewport {
     activeCamera.setFreezeFocalPoint(true);
 
     // set voi for the first time
-    const { windowCenter, windowWidth } = imagePixelModule;
+    const { windowCenter, windowWidth, voiLUTFunction } = imagePixelModule;
+
     let voiRange =
       typeof windowCenter === 'number' && typeof windowWidth === 'number'
         ? windowLevelUtil.toLowHighRange(windowWidth, windowCenter)
@@ -1774,6 +1809,7 @@ class StackViewport extends Viewport implements IStackViewport {
       // In that case we want to keep the applied VOI range.
       voiRange = this.voiRange;
     }
+    this.voiFunction = voiLUTFunction;
     this.setProperties({ voiRange });
 
     // At the moment it appears that vtkImageSlice actors do not automatically
@@ -1781,20 +1817,22 @@ class StackViewport extends Viewport implements IStackViewport {
     // Note: the 1024 here is what VTK would normally do to resample a color transfer function
     // before it is put into the GPU. Setting it with a length of 1024 allows us to
     // avoid that resampling step.
-    const cfun = vtkColorTransferFunction.newInstance();
-    let lower = 0;
-    let upper = 1024;
-    if (
-      voiRange &&
-      voiRange.lower !== undefined &&
-      voiRange.upper !== undefined
-    ) {
-      lower = voiRange.lower;
-      upper = voiRange.upper;
+    if (actor.getProperty().getRGBTransferFunction(0) === null) {
+      const cfun = vtkColorTransferFunction.newInstance();
+      let lower = 0;
+      let upper = 1024;
+      if (
+        voiRange &&
+        voiRange.lower !== undefined &&
+        voiRange.upper !== undefined
+      ) {
+        lower = voiRange.lower;
+        upper = voiRange.upper;
+      }
+      cfun.addRGBPoint(lower, 0.0, 0.0, 0.0);
+      cfun.addRGBPoint(upper, 1.0, 1.0, 1.0);
+      actor.getProperty().setRGBTransferFunction(0, cfun);
     }
-    cfun.addRGBPoint(lower, 0.0, 0.0, 0.0);
-    cfun.addRGBPoint(upper, 1.0, 1.0, 1.0);
-    actor.getProperty().setRGBTransferFunction(0, cfun);
 
     // Saving position of camera on render, to cache the panning
     const { position } = this.getCamera();

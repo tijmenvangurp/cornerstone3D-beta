@@ -1986,6 +1986,7 @@ interface IImage {
         lastRenderTime?: number;
     };
     voiLUT?: CPUFallbackLUT;
+    voiLUTFunction: string;
     width: number;
     windowCenter: number[] | number;
     windowWidth: number[] | number;
@@ -2793,6 +2794,7 @@ type Metadata = {
     Columns: number;
     Rows: number;
     voiLut: Array<VOI>;
+    VOILUTFunction: string;
 };
 
 // @public (undocumented)
@@ -4503,6 +4505,7 @@ export class VolumeRotateMouseWheelTool extends BaseTool {
 // @public
 type VolumeViewportProperties = {
     voiRange?: VOIRange;
+    voiFunction?: VOILUTFunctionType;
 };
 
 // @public (undocumented)
