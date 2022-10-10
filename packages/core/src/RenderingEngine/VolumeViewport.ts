@@ -180,12 +180,12 @@ class VolumeViewport extends Viewport implements IVolumeViewport {
    * (if fusion, it sets it for the first volume in the fusion)
    *
    * @param voiRange - Sets the lower and upper voi
-   * @param voiFunction - Sets the voi mode (LINEAR, EXACT_LINEAR, or SIGMOID)
+   * @param voiLutFunction - Sets the voi mode (LINEAR, EXACT_LINEAR, or SIGMOID)
    * @param volumeId - The volume id to set the properties for (if undefined, the first volume)
    * @param suppressEvents - If true, the viewport will not emit events
    */
   public setProperties(
-    { voiRange, voiFunction }: VolumeViewportProperties = {},
+    { voiRange, voiLutFunction }: VolumeViewportProperties = {},
     volumeId?: string,
     suppressEvents = false
   ): void {
@@ -222,9 +222,9 @@ class VolumeViewport extends Viewport implements IVolumeViewport {
     // Todo: later when we have more properties, refactor the setVoiRange code below
     const { lower, upper } = voiRange;
 
-    // Todo: consider moving voiFunction into the ViewportInput, currently VolumeViewport
-    // setProperties is used by @cornerstonejs/tools which does not pass a voiFunction.
-    if (voiFunction === VOILUTFunctionType.SIGMOID) {
+    // Todo: consider moving voiLutFunction into the ViewportInput, currently VolumeViewport
+    // setProperties is used by @cornerstonejs/tools which does not pass a voiLutFunction.
+    if (voiLutFunction === VOILUTFunctionType.SIGMOID) {
       const { windowWidth, windowCenter } = windowLevelUtil.toWindowLevel(
         voiRange.lower,
         voiRange.upper

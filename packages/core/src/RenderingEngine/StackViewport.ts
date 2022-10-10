@@ -67,6 +67,7 @@ import cache from '../cache';
 import correctShift from './helpers/cpuFallback/rendering/correctShift';
 import { ImageActor } from '../types/IActor';
 import isRgbaSourceRgbDest from './helpers/isRgbaSourceRgbDest';
+import createLinearRGBTransferFunction from '../utilities/createLinearRGBTransferFunction';
 
 const EPSILON = 1; // Slice Thickness
 
@@ -135,7 +136,7 @@ class StackViewport extends Viewport implements IStackViewport {
 
   // Viewport Properties
   private voiRange: VOIRange;
-  private voiFunction: VOILUTFunctionType;
+  private voiLutFunction: VOILUTFunctionType;
   private initialVOIRange: VOIRange;
   private invert = false;
   private interpolationType: InterpolationType;
@@ -563,6 +564,7 @@ class StackViewport extends Viewport implements IStackViewport {
   public setProperties(
     {
       voiRange,
+      voiLutFunction,
       invert,
       interpolationType,
       rotation,
@@ -572,7 +574,21 @@ class StackViewport extends Viewport implements IStackViewport {
     // if voi is not applied for the first time, run the setVOI function
     // which will apply the default voi
     if (typeof voiRange !== 'undefined' || !this.voiApplied) {
-      this.setVOI(voiRange, suppressEvents);
+      this.setVOI(voiRange, null, suppressEvents);
+    }
+
+    if (typeof voiLutFunction !== 'undefined') {
+      let voiLutFunctionChanged = false;
+
+      if (this.voiLutFunction !== voiLutFunction) {
+        voiLutFunctionChanged = true;
+      }
+
+      this.setVOILUTFunction(
+        voiLutFunction,
+        voiLutFunctionChanged,
+        suppressEvents
+      );
     }
 
     if (typeof invert !== 'undefined') {
@@ -824,13 +840,17 @@ class StackViewport extends Viewport implements IStackViewport {
     }
   }
 
-  private setVOI(voiRange: VOIRange, suppressEvents?: boolean): void {
+  private setVOI(
+    voiRange: VOIRange,
+    voiLutFunctionChanged = false,
+    suppressEvents?: boolean
+  ): void {
     if (this.useCPURendering) {
       this.setVOICPU(voiRange, suppressEvents);
       return;
     }
 
-    this.setVOIGPU(voiRange, suppressEvents);
+    this.setVOIGPU(voiRange, voiLutFunctionChanged, suppressEvents);
   }
 
   private setRotation(rotationCache: number, rotation: number): void {
@@ -855,6 +875,26 @@ class StackViewport extends Viewport implements IStackViewport {
     };
 
     triggerEvent(this.element, Events.CAMERA_MODIFIED, eventDetail);
+  }
+
+  private setVOILUTFunction(
+    voiLUTFunction: VOILUTFunctionType,
+    voiLutFunctionChanged = false,
+    suppressEvents?: boolean
+  ): void {
+    if (this.useCPURendering) {
+      throw new Error('VOI LUT function is not supported in CPU rendering');
+    }
+
+    // make sure the VOI LUT function is valid in the VOILUTFunctionType which is enum
+    if (Object.values(VOILUTFunctionType).indexOf(voiLUTFunction) === -1) {
+      voiLUTFunction = VOILUTFunctionType.LINEAR;
+    }
+
+    this.voiLutFunction = voiLUTFunction;
+
+    const { voiRange } = this.getProperties();
+    this.setVOIGPU(voiRange, voiLutFunctionChanged, suppressEvents);
   }
 
   private setInterpolationType(interpolationType: InterpolationType): void {
@@ -1016,7 +1056,11 @@ class StackViewport extends Viewport implements IStackViewport {
     }
   }
 
-  private setVOIGPU(voiRange: VOIRange, suppressEvents?: boolean): void {
+  private setVOIGPU(
+    voiRange: VOIRange,
+    voiLutFunctionChanged?: boolean,
+    suppressEvents?: boolean
+  ): void {
     const defaultActor = this.getDefaultActor();
     if (!defaultActor) {
       return;
@@ -1043,13 +1087,18 @@ class StackViewport extends Viewport implements IStackViewport {
       voiRangeToUse.upper
     );
 
-    if (this.voiFunction === VOILUTFunctionType.SIGMOID) {
-      const cfun = createSigmoidRGBTransferFunction(
-        windowWidth,
-        windowCenter,
-        maxVoiRange
-      );
-      imageActor.getProperty().setRGBTransferFunction(0, cfun);
+    let cfun = imageActor.getProperty().getRGBTransferFunction(0);
+
+    if (this.voiLutFunction === VOILUTFunctionType.SIGMOID) {
+      if (voiLutFunctionChanged) {
+        cfun = createSigmoidRGBTransferFunction(
+          windowWidth,
+          windowCenter,
+          maxVoiRange
+        );
+        imageActor.getProperty().setRGBTransferFunction(0, cfun);
+      }
+
       const maxVoi = windowLevelUtil.toWindowLevel(
         maxVoiRange.lower,
         maxVoiRange.upper
@@ -1057,6 +1106,11 @@ class StackViewport extends Viewport implements IStackViewport {
       imageActor.getProperty().setColorWindow(maxVoi.windowWidth);
       imageActor.getProperty().setColorLevel(maxVoi.windowCenter);
     } else {
+      if (voiLutFunctionChanged) {
+        cfun = createLinearRGBTransferFunction(voiRange);
+        imageActor.getProperty().setRGBTransferFunction(0, cfun);
+      }
+
       imageActor.getProperty().setColorWindow(windowWidth);
       imageActor.getProperty().setColorLevel(windowCenter);
     }
@@ -1809,7 +1863,7 @@ class StackViewport extends Viewport implements IStackViewport {
       // In that case we want to keep the applied VOI range.
       voiRange = this.voiRange;
     }
-    this.voiFunction = voiLUTFunction;
+    this.voiLutFunction = voiLUTFunction;
     this.setProperties({ voiRange });
 
     // At the moment it appears that vtkImageSlice actors do not automatically
@@ -1818,19 +1872,7 @@ class StackViewport extends Viewport implements IStackViewport {
     // before it is put into the GPU. Setting it with a length of 1024 allows us to
     // avoid that resampling step.
     if (actor.getProperty().getRGBTransferFunction(0) === null) {
-      const cfun = vtkColorTransferFunction.newInstance();
-      let lower = 0;
-      let upper = 1024;
-      if (
-        voiRange &&
-        voiRange.lower !== undefined &&
-        voiRange.upper !== undefined
-      ) {
-        lower = voiRange.lower;
-        upper = voiRange.upper;
-      }
-      cfun.addRGBPoint(lower, 0.0, 0.0, 0.0);
-      cfun.addRGBPoint(upper, 1.0, 1.0, 1.0);
+      const cfun = createLinearRGBTransferFunction(voiRange);
       actor.getProperty().setRGBTransferFunction(0, cfun);
     }
 

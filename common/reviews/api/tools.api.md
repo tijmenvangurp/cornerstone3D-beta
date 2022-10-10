@@ -3938,6 +3938,7 @@ type StackViewportNewStackEventDetail = {
 // @public
 type StackViewportProperties = {
     voiRange?: VOIRange;
+    voiLutFunction?: VOILUTFunctionType;
     invert?: boolean;
     interpolationType?: InterpolationType;
     rotation?: number;
@@ -4505,7 +4506,7 @@ export class VolumeRotateMouseWheelTool extends BaseTool {
 // @public
 type VolumeViewportProperties = {
     voiRange?: VOIRange;
-    voiFunction?: VOILUTFunctionType;
+    voiLutFunction?: VOILUTFunctionType;
 };
 
 // @public (undocumented)

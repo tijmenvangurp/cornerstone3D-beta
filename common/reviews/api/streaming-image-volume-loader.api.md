@@ -1169,6 +1169,7 @@ type StackViewportNewStackEventDetail = {
 // @public
 type StackViewportProperties = {
     voiRange?: VOIRange;
+    voiLutFunction?: VOILUTFunctionType;
     invert?: boolean;
     interpolationType?: InterpolationType;
     rotation?: number;
@@ -1256,11 +1257,11 @@ type VOI = {
 // @public
 enum VOILUTFunctionType {
     // (undocumented)
-    EXACT_LINEAR,
+    EXACT_LINEAR = 'exactLinear',
     // (undocumented)
-    LINEAR,
+    LINEAR = 'linear',
     // (undocumented)
-    SIGMOID,
+    SIGMOID = 'sigmoid',
 }
 
 // @public
@@ -1347,7 +1348,7 @@ type VolumeNewImageEventDetail = {
 // @public
 type VolumeViewportProperties = {
     voiRange?: VOIRange;
-    voiFunction?: VOILUTFunctionType;
+    voiLutFunction?: VOILUTFunctionType;
 };
 
 // (No @packageDocumentation comment for this package)

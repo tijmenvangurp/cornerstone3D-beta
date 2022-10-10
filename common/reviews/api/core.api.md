@@ -1775,7 +1775,7 @@ export class StackViewport extends Viewport implements IStackViewport {
     // (undocumented)
     setImageIdIndex(imageIdIndex: number): Promise<string>;
     // (undocumented)
-    setProperties({ voiRange, invert, interpolationType, rotation, }?: StackViewportProperties, suppressEvents?: boolean): void;
+    setProperties({ voiRange, voiLutFunction, invert, interpolationType, rotation, }?: StackViewportProperties, suppressEvents?: boolean): void;
     // (undocumented)
     setStack(imageIds: Array<string>, currentImageIdIndex?: number): Promise<string>;
     // (undocumented)
@@ -1800,6 +1800,7 @@ type StackViewportNewStackEventDetail = {
 // @public (undocumented)
 type StackViewportProperties = {
     voiRange?: VOIRange;
+    voiLutFunction?: VOILUTFunctionType;
     invert?: boolean;
     interpolationType?: InterpolationType;
     rotation?: number;
@@ -2103,11 +2104,11 @@ type VOI = {
 // @public (undocumented)
 enum VOILUTFunctionType {
     // (undocumented)
-    EXACT_LINEAR = 2,
+    EXACT_LINEAR = "exactLinear",
     // (undocumented)
-    LINEAR = 0,
+    LINEAR = "linear",
     // (undocumented)
-    SIGMOID = 1
+    SIGMOID = "sigmoid"
 }
 
 // @public (undocumented)
@@ -2234,7 +2235,7 @@ export class VolumeViewport extends Viewport implements IVolumeViewport {
     // (undocumented)
     setOrientation(orientation: OrientationAxis, immediate?: boolean): void;
     // (undocumented)
-    setProperties({ voiRange, voiFunction }?: VolumeViewportProperties, volumeId?: string, suppressEvents?: boolean): void;
+    setProperties({ voiRange, voiLutFunction }?: VolumeViewportProperties, volumeId?: string, suppressEvents?: boolean): void;
     // (undocumented)
     setSlabThickness(slabThickness: number, filterActorUIDs?: any[]): void;
     // (undocumented)
@@ -2250,7 +2251,7 @@ export class VolumeViewport extends Viewport implements IVolumeViewport {
 // @public (undocumented)
 type VolumeViewportProperties = {
     voiRange?: VOIRange;
-    voiFunction?: VOILUTFunctionType;
+    voiLutFunction?: VOILUTFunctionType;
 };
 
 declare namespace windowLevel {

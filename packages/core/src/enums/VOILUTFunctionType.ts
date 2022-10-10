@@ -2,9 +2,9 @@
  * Interpolation types for image rendering
  */
 enum VOILUTFunctionType {
-  LINEAR,
-  SIGMOID,
-  EXACT_LINEAR,
+  LINEAR = 'linear',
+  SIGMOID = 'sigmoid',
+  EXACT_LINEAR = 'exactLinear',
 }
 
 export default VOILUTFunctionType;
