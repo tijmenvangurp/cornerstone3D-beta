@@ -1,15 +1,18 @@
 {
   "version": "independent",
   "packages": [
-    "packages/core",
-    "packages/tools",
-    "packages/streaming-image-volume-loader"
+    "packages/*"
   ],
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command": {
     "publish": {
-      "ignoreChanges": ["*.md", "*.yml", "*.spec.js", "*.test.js"],
+      "ignoreChanges": [
+        "*.md",
+        "*.yml",
+        "*.spec.js",
+        "*.test.js"
+      ],
       "message": "chore(release): publish"
     },
     "version": {
