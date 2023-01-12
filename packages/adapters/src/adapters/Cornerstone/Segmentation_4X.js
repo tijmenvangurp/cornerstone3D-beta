@@ -1,24 +1,24 @@
-import log from "../../log.js";
-import ndarray from "ndarray";
-import { BitArray } from "../../bitArray.js";
-import { datasetToBlob } from "../../datasetToBlob.js";
-import { DicomMessage } from "../../DicomMessage.js";
-import { DicomMetaDictionary } from "../../DicomMetaDictionary.js";
-import { Normalizer } from "../../normalizers.js";
-import { Segmentation as SegmentationDerivation } from "../../derivations/index.js";
+import { log, utilities, normalizers, derivations } from "dcmjs";
 import { mat4 } from "gl-matrix";
-import {
+import ndarray from "ndarray";
+import cloneDeep from "lodash.clonedeep";
+
+const {
+    datasetToBlob,
+    BitArray,
+    DicomMessage,
+    DicomMetaDictionary,
     rotateDirectionCosinesInPlane,
-    flipImageOrientationPatient as flipIOP,
+    flipImageOrientationPatient: flipIOP,
     flipMatrix2D,
     rotateMatrix902D,
-    nearlyEqual
-} from "../../utilities/orientation/index.js";
-import {
-    encode,
-    decode
-} from "../../utilities/compression/rleSingleSamplePerPixel";
-import cloneDeep from "lodash.clonedeep";
+    nearlyEqual,
+    compression
+} = utilities;
+
+const { encode, decode } = compression;
+const { Normalizer } = normalizers;
+const { Segmentation: SegmentationDerivation } = derivations;
 
 const Segmentation = {
     generateSegmentation,

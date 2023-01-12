@@ -1,7 +1,9 @@
 import MeasurementReport from "./MeasurementReport";
-import TID300Polyline from "../../utilities/TID300/Polyline";
+import { utilities } from "dcmjs";
 import CORNERSTONE_3D_TAG from "./cornerstone3DTag";
 import { vec3 } from "gl-matrix";
+
+const { TID300Polyline } = utilities.TID300;
 
 const PLANARFREEHANDROI = "PlanarFreehandROI";
 const perimeterCodeValue = "131191004";

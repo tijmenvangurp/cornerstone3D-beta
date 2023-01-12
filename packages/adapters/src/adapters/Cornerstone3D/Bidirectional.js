@@ -1,8 +1,9 @@
-import MeasurementReport from "./MeasurementReport";
-import TID300Bidirectional from "../../utilities/TID300/Bidirectional";
+import { utilities } from "dcmjs";
 import CORNERSTONE_3D_TAG from "./cornerstone3DTag";
-
+import MeasurementReport from "./MeasurementReport";
 import { toArray } from "../helpers.js";
+
+const { TID300Bidirectional } = utilities.TID300;
 
 const BIDIRECTIONAL = "Bidirectional";
 const LONG_AXIS = "Long Axis";

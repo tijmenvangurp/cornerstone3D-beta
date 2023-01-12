@@ -1,6 +1,9 @@
-import MeasurementReport from "./MeasurementReport.js";
-import TID300Point from "../../utilities/TID300/Point.js";
+import { utilities } from "dcmjs";
+
+import MeasurementReport from "./MeasurementReport";
 import CORNERSTONE_4_TAG from "./cornerstone4Tag";
+
+const { TID300Point } = utilities.TID300;
 
 const ARROW_ANNOTATE = "ArrowAnnotate";
 const CORNERSTONEFREETEXT = "CORNERSTONEFREETEXT";

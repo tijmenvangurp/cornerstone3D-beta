@@ -1,17 +1,18 @@
-import log from "../../log.js";
+import { log, utilities, normalizers, derivations } from "dcmjs";
 import ndarray from "ndarray";
-import { BitArray } from "../../bitArray.js";
-import { datasetToBlob } from "../../datasetToBlob.js";
-import { DicomMessage } from "../../DicomMessage.js";
-import { DicomMetaDictionary } from "../../DicomMetaDictionary.js";
-import { Normalizer } from "../../normalizers.js";
-import { Segmentation as SegmentationDerivation } from "../../derivations/index.js";
-import {
+
+const {
     rotateDirectionCosinesInPlane,
-    flipImageOrientationPatient as flipIOP,
+    flipImageOrientationPatient: flipIOP,
     flipMatrix2D,
     rotateMatrix902D
-} from "../../utilities/orientation/index.js";
+} = utilities.orientation;
+
+const { datasetToBlob, BitArray, DicomMessage, DicomMetaDictionary } =
+    utilities;
+
+const { Normalizer } = normalizers;
+const { Segmentation: SegmentationDerivation } = derivations;
 
 const Segmentation = {
     generateSegmentation,

@@ -1,11 +1,10 @@
+import { utilities } from "dcmjs";
 import MeasurementReport from "./MeasurementReport";
-import TID300Circle from "../../utilities/TID300/Circle";
 import CORNERSTONE_4_TAG from "./cornerstone4Tag";
-import { toArray } from "../helpers.js";
+
+const { TID300Circle } = utilities.TID300;
 
 const CIRCLEROI = "CircleRoi";
-const FINDING = "121071";
-const FINDING_SITE = "G-C0E3";
 
 class CircleRoi {
     constructor() {}

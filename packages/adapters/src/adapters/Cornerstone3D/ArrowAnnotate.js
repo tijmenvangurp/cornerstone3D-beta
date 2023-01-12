@@ -1,7 +1,9 @@
-import MeasurementReport from "./MeasurementReport.js";
-import TID300Point from "../../utilities/TID300/Point.js";
+import MeasurementReport from "./MeasurementReport";
+import { utilities } from "dcmjs";
 import CORNERSTONE_3D_TAG from "./cornerstone3DTag";
 import CodingScheme from "./CodingScheme";
+
+const { TID300Point } = utilities.TID300;
 
 const ARROW_ANNOTATE = "ArrowAnnotate";
 const trackingIdentifierTextValue = `${CORNERSTONE_3D_TAG}:${ARROW_ANNOTATE}`;

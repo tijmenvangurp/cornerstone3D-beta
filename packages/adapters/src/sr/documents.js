@@ -1,4 +1,5 @@
-import { DicomMetaDictionary } from "../DicomMetaDictionary.js";
+import { data } from "dcmjs";
+const { DicomMetaDictionary } = data;
 
 const _attributesToInclude = [
     // Patient

@@ -1,6 +1,10 @@
-import MeasurementReport from "./MeasurementReport.js";
-import TID300CobbAngle from "../../utilities/TID300/CobbAngle.js";
+import { utilities } from "dcmjs";
+import { vec3 } from "gl-matrix";
+
+import MeasurementReport from "./MeasurementReport";
 import CORNERSTONE_4_TAG from "./cornerstone4Tag";
+
+const { TID300CobbAngle } = utilities.TID300;
 
 const ANGLE = "Angle";
 

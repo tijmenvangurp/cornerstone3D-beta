@@ -1,11 +1,16 @@
-import { Normalizer } from "../../normalizers.js";
-import { DicomMetaDictionary } from "../../DicomMetaDictionary.js";
-import { StructuredReport } from "../../derivations/index.js";
-import TID1500MeasurementReport from "../../utilities/TID1500/TID1500MeasurementReport.js";
-import TID1501MeasurementGroup from "../../utilities/TID1500/TID1501MeasurementGroup.js";
-import addAccessors from "../../utilities/addAccessors.js";
+import { normalizers, data, utilities, derivations } from "dcmjs";
 
-import { toArray, codeMeaningEquals } from "../helpers.js";
+import { toArray, codeMeaningEquals } from "../helpers";
+
+const { TID1500, addAccessors } = utilities;
+
+const { StructuredReport } = derivations;
+
+const { Normalizer } = normalizers;
+
+const { TID1500MeasurementReport, TID1501MeasurementGroup } = TID1500;
+
+const { DicomMetaDictionary } = data;
 
 const FINDING = { CodingSchemeDesignator: "DCM", CodeValue: "121071" };
 const FINDING_SITE = { CodingSchemeDesignator: "SCT", CodeValue: "363698007" };
