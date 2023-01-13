@@ -12,11 +12,10 @@ const {
     flipImageOrientationPatient: flipIOP,
     flipMatrix2D,
     rotateMatrix902D,
-    nearlyEqual,
-    compression
+    nearlyEqual
 } = utilities;
 
-const { encode, decode } = compression;
+const { encode, decode } = utilities.compression;
 const { Normalizer } = normalizers;
 const { Segmentation: SegmentationDerivation } = derivations;
 

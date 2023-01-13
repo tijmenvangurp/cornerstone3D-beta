@@ -1,6 +1,7 @@
 import { normalizers, data, utilities, derivations } from "dcmjs";
 
 import { toArray, codeMeaningEquals } from "../helpers";
+import Cornerstone3DCodingScheme from "./CodingScheme";
 
 const { TID1500, addAccessors } = utilities;
 
@@ -85,6 +86,8 @@ export default class MeasurementReport {
 
     static getCornerstoneLabelFromDefaultState(defaultState) {
         const { findingSites = [], finding } = defaultState;
+
+        console.log("* Cornerstone3DCodingScheme", Cornerstone3DCodingScheme);
 
         const cornersoneFreeTextCodingValue =
             Cornerstone3DCodingScheme.codeValues.CORNERSTONEFREETEXT;
