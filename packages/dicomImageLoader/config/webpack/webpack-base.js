@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+
 const rootPath = process.cwd();
 const context = path.join(rootPath, 'src');
 const codecs = path.join(rootPath, 'codecs');
@@ -12,7 +13,7 @@ module.exports = {
   mode: 'development',
   context,
   entry: {
-    cornerstoneWADOImageLoader: './imageLoader/index.js',
+    cornerstoneDICOMImageLoader: './imageLoader/index.js',
   },
   target: 'web',
   output: {
