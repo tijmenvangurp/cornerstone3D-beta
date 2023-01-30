@@ -163,7 +163,6 @@ module.exports = {
     'no-useless-escape': 'warn',
     'no-useless-rename': 'warn',
     'no-useless-return': 'off',
-    'no-var': 'warn',
     'no-void': 'warn',
     // 'no-warning-comments': 'warn',
     'no-whitespace-before-property': 'warn',
