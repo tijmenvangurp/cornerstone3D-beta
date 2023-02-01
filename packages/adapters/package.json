@@ -5,8 +5,7 @@
     "src": "src/index.ts",
     "main": "src/index.ts",
     "files": [
-        "dist",
-        "src"
+        "dist"
     ],
     "directories": {
         "example": "examples",
