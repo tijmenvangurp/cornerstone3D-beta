@@ -30,6 +30,7 @@ const {
   BidirectionalTool,
   AngleTool,
   CobbAngleTool,
+  PlanarFreehandROITool,
   ToolGroupManager,
   ArrowAnnotateTool,
   StackScrollMouseWheelTool,
@@ -73,6 +74,7 @@ const toolsNames = [
   BidirectionalTool.toolName,
   AngleTool.toolName,
   CobbAngleTool.toolName,
+  PlanarFreehandROITool,
   ArrowAnnotateTool.toolName,
 ];
 let selectedToolName = toolsNames[0];
@@ -142,6 +144,7 @@ async function run() {
   cornerstoneTools.addTool(BidirectionalTool);
   cornerstoneTools.addTool(AngleTool);
   cornerstoneTools.addTool(CobbAngleTool);
+  cornerstoneTools.addTool(PlanarFreehandROITool);
   cornerstoneTools.addTool(ArrowAnnotateTool);
   cornerstoneTools.addTool(StackScrollMouseWheelTool);
 
@@ -157,6 +160,7 @@ async function run() {
   toolGroup.addTool(BidirectionalTool.toolName);
   toolGroup.addTool(AngleTool.toolName);
   toolGroup.addTool(CobbAngleTool.toolName);
+  toolGroup.addTool(PlanarFreehandROITool.toolName);
   toolGroup.addTool(ArrowAnnotateTool.toolName);
   toolGroup.addTool(StackScrollMouseWheelTool.toolName);
 

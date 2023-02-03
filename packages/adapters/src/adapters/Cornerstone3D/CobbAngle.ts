@@ -8,6 +8,7 @@ const MEASUREMENT_TYPE = "CobbAngle";
 const trackingIdentifierTextValue = `${CORNERSTONE_3D_TAG}:${MEASUREMENT_TYPE}`;
 
 class CobbAngle {
+    static toolType = MEASUREMENT_TYPE;
     // TODO: this function is required for all Cornerstone Tool Adapters, since it is called by MeasurementReport.
     static getMeasurementData(
         MeasurementGroup,
@@ -102,9 +103,7 @@ class CobbAngle {
     }
 }
 
-CobbAngle.toolType = MEASUREMENT_TYPE;
 CobbAngle.utilityToolType = MEASUREMENT_TYPE;
-console.log("TID300CobbAngle=", TID300CobbAngle);
 CobbAngle.TID300Representation = TID300CobbAngle;
 CobbAngle.isValidCornerstoneTrackingIdentifier = TrackingIdentifier => {
     if (!TrackingIdentifier.includes(":")) {
