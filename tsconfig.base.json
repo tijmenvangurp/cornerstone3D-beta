@@ -34,6 +34,7 @@
   "exclude": [
     "node_modules",
     "dist",
+    "lib",
     "packages/**/dist",
     "packages/**/lib",
     "packages/**/lib-esm",

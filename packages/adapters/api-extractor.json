@@ -1,0 +1,54 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
+
+    "compiler": {},
+
+    "docModel": {
+        "enabled": false
+    },
+
+    "dtsRollup": {
+        "enabled": true
+    },
+
+    "tsdocMetadata": {
+        "enabled": true
+    },
+
+    "messages": {
+        "compilerMessageReporting": {
+            "default": {
+                "logLevel": "warning"
+            }
+        },
+
+        "extractorMessageReporting": {
+            "default": {
+                "logLevel": "none"
+            },
+
+            "ae-forgotten-export": {
+                "logLevel": "none",
+                "addToApiReportFile": false
+            },
+
+            "ae-missing-release-tag": {
+                "logLevel": "none",
+                "addToApiReportFile": false
+            }
+        },
+
+        "tsdocMessageReporting": {
+            "default": {
+                "logLevel": "warning"
+            }
+        }
+    },
+    "projectFolder": ".",
+    "mainEntryPointFilePath": "<projectFolder>/dist/@cornerstonejs/dts/index.d.ts",
+    "apiReport": {
+        "enabled": true,
+        "reportFileName": "<unscopedPackageName>.api.md",
+        "reportFolder": "../../common/reviews/api"
+    }
+}

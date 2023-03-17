@@ -1,7 +1,18 @@
 {
     "compilerOptions": {
+        "baseUrl": "./",
         "declaration": true,
         "declarationDir": "dts",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "useDefineForClassFields": false,
         "emitDeclarationOnly": true
-    }
+    },
+    "exclude": [
+        "node_modules",
+        "../../node_modules",
+        "dist",
+        "snippets",
+        "examples"
+    ]
 }

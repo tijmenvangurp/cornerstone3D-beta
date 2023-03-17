@@ -131,6 +131,16 @@
       "prettier --write"
     ]
   },
+  "resolutions": {
+    "clsx": "^1.2.1",
+    "core-js": "^3.26.1",
+    "date-format": "^4.0.11",
+    "fs-extra": "^10.0.0",
+    "uuid": "^9.0.0",
+    "puppeteer": "^13.7.0",
+    "dicom-parser": "^1.8.13",
+    "dcmjs": "^0.29.5"
+  },
   "browserslist": [
     ">0.2%",
     "not dead",
